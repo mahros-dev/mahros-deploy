@@ -3,7 +3,7 @@ set -euo pipefail
 
 CMD="${1:-}"
 
-IMAGE="ghcr.io/mahros-dev/mahros-dev:latest"
+IMAGE="ghcr.io/mahros-dev/mahros-deploy:latest"
 
 run_container() {
   docker run --rm -it \
