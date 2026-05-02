@@ -1,6 +1,7 @@
 FROM alpine:3.20
 
 RUN apk add --no-cache bash curl ca-certificates
+RUN apk add --no-cache bash curl ca-certificates docker-cli
 
 WORKDIR /app
 
