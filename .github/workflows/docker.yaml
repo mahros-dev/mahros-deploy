@@ -1,0 +1,43 @@
+name: Build and Publish Docker Image
+
+on:
+  push:
+    tags:
+      - "v*"
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE_NAME: ghcr.io/mahros-dev/mahros-dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set version
+        run: echo "${GITHUB_REF_NAME}" > VERSION
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        run: |
+          docker build -f docker/Dockerfile -t $IMAGE_NAME:${GITHUB_REF_NAME} .
+          docker tag $IMAGE_NAME:${GITHUB_REF_NAME} $IMAGE_NAME:latest
+
+      - name: Push image
+        run: |
+          docker push $IMAGE_NAME:${GITHUB_REF_NAME}
+          docker push $IMAGE_NAME:latest
